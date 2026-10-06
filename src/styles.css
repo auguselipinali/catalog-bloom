@@ -1,144 +1,568 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
-
 @custom-variant dark (&:is(.dark *));
-
-/*
- * Design system definition.
- *
- * The @theme inline block maps CSS custom properties to Tailwind utility
- * classes (e.g. --color-primary -> bg-primary, text-primary).
- *
- * The :root and .dark blocks define the actual color values using oklch.
- * All colors MUST use oklch format.
- *
- * To add a new semantic color:
- * 1. Add the variable to :root (light value) and .dark (dark value)
- * 2. Register it in @theme inline as --color-<name>: var(--<name>)
- */
-
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  --font-sans: "Inter", sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
+  --color-card-foreground: var(--foreground);
+  --color-popover: var(--card);
+  --color-popover-foreground: var(--foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-foreground: var(--foreground);
   --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-foreground: var(--primary-foreground);
   --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-ring-offset-background: var(--background);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+  --color-input: var(--border);
+  --color-ring: var(--primary);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 24px;
 }
-
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  /* Change this variable to configure the catalog's primary color. */
+  --brand-primary: oklch(0.621 0.213 285.5);
+  --primary: var(--brand-primary);
+  --primary-foreground: oklch(1 0 0);
+  --background: oklch(0.97 0.014 290);
+  --foreground: oklch(0.166 0.025 274);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
+  --secondary: oklch(0.789 0.135 211.9);
+  --muted: oklch(0.925 0.018 289);
+  --muted-foreground: oklch(0.5 0.02 275);
+  --accent: oklch(0.94 0.035 287);
+  --border: oklch(0.166 0.025 274 / 0.06);
+  --destructive: oklch(0.6 0.2 25);
+  --shadow-card: 0 3px 16px oklch(0.166 0.025 274 / 0.025);
+  --shadow-brand: 0 4px 12px color-mix(in oklab, var(--primary) 22%, transparent);
+  --brand-gradient: linear-gradient(135deg, var(--primary), var(--secondary));
 }
-
-.dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
-}
-
 @layer base {
   * {
-    border-color: var(--color-border);
+    border-color: var(--border);
+    letter-spacing: 0;
+    box-sizing: border-box;
   }
-
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+    margin: 0;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  button,
+  input,
+  select {
+    font: inherit;
+  }
+  button,
+  a,
+  select {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+.catalog-container {
+  width: 100%;
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-inline: 16px;
+}
+.catalog-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: color-mix(in oklab, var(--background) 85%, transparent);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--card);
+}
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  background: var(--brand-gradient);
+  color: var(--primary-foreground);
+  font-weight: 800;
+  font-size: 20px;
+  box-shadow: var(--shadow-brand);
+}
+.brand-name {
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+.brand-tagline {
+  font-size: 11px;
+  color: var(--muted-foreground);
+  margin-top: 3px;
+  font-weight: 500;
+}
+.cart-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 15px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+  color: var(--foreground);
+}
+.cart-button:hover {
+  background: var(--accent);
+}
+.catalog-main {
+  padding-top: 22px;
+  padding-bottom: 64px;
+}
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 49px;
+  border-radius: 16px;
+  padding-inline: 15px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+}
+.search-field:focus-within {
+  outline: 2px solid color-mix(in oklab, var(--primary) 45%, transparent);
+}
+.search-field input {
+  min-width: 0;
+  flex: 1;
+  width: 100%;
+  outline: none;
+  background: transparent;
+  border: 0;
+  font-size: 14px;
+}
+.search-field input::placeholder {
+  color: var(--muted-foreground);
+}
+.search-field input::-webkit-search-cancel-button {
+  display: none;
+}
+.category-chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin: 16px -16px 0;
+  padding: 0 16px 6px;
+}
+.chip-button {
+  flex-shrink: 0;
+  border-radius: 999px;
+  height: 36px;
+  padding: 0 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--muted-foreground);
+  font-size: 13px;
+  font-weight: 500;
+}
+.chip-button:hover {
+  background: var(--accent);
+}
+.chip-active,
+.chip-active:hover {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+  font-weight: 600;
+  box-shadow: var(--shadow-brand);
+}
+.catalog-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  margin-top: 9px;
+  margin-bottom: 16px;
+}
+.catalog-toolbar h1 {
+  font-size: 13px;
+  font-weight: 600;
+}
+.sort-field {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 9px 7px 12px;
+  color: var(--muted-foreground);
+}
+.sort-field select {
+  min-width: 0;
+  max-width: 160px;
+  outline: none;
+  background: transparent;
+  font-size: 12px;
+  cursor: pointer;
+}
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: stretch;
+}
+.product-card {
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.product-featured {
+  grid-row: span 2;
+}
+.product-image-link {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--muted);
+}
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s ease;
+}
+.product-image-link:hover .product-image {
+  transform: scale(1.025);
+}
+.product-featured .product-image-link {
+  aspect-ratio: auto;
+  flex: 1;
+  min-height: 250px;
+}
+.product-featured .product-image {
+  position: absolute;
+  inset: 0;
+}
+.product-info {
+  padding: 12px;
+}
+.product-featured .product-info {
+  padding: 16px;
+}
+.product-info h2 {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.product-featured h2 {
+  font-size: 15px;
+}
+.product-size {
+  font-size: 11px;
+  color: var(--muted-foreground);
+  margin-top: 3px;
+}
+.category-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--secondary) 16%, var(--card));
+  color: oklch(0.46 0.09 211);
+  padding: 3px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-bottom: 7px;
+}
+.product-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: 12px;
+}
+.product-price {
+  font-weight: 800;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.product-featured .product-price {
+  font-size: 16px;
+}
+.catalog-button {
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: var(--shadow-brand);
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+.catalog-button:hover {
+  background: color-mix(in oklab, var(--primary) 90%, var(--foreground));
+}
+.catalog-button:active {
+  transform: scale(0.97);
+}
+.catalog-button:disabled {
+  background: var(--muted);
+  color: var(--muted-foreground);
+  box-shadow: none;
+  opacity: 1;
+}
+.stock-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  border-radius: 999px;
+  padding: 4px 9px;
+  background: color-mix(in oklab, var(--foreground) 85%, transparent);
+  color: var(--primary-foreground);
+  font-size: 10px;
+  font-weight: 600;
+  z-index: 2;
+}
+.empty-state {
+  text-align: center;
+  padding: 64px 20px;
+}
+.empty-icon {
+  margin: 0 auto 16px;
+  display: grid;
+  place-items: center;
+  height: 56px;
+  width: 56px;
+  border-radius: 16px;
+  background: var(--accent);
+  color: var(--primary);
+}
+.empty-state h2 {
+  font-weight: 700;
+  font-size: 18px;
+}
+.empty-state p {
+  font-size: 14px;
+  color: var(--muted-foreground);
+  margin: 8px 0 22px;
+}
+.catalog-outline {
+  border-radius: 999px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--primary);
+}
+.not-found {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 32px;
+  gap: 20px;
+}
+.error-number {
+  font-size: 80px;
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1;
+}
+.not-found h1 {
+  font-size: 24px;
+  font-weight: 700;
+}
+.not-found > p:not(.error-number) {
+  font-size: 14px;
+  color: var(--muted-foreground);
+  max-width: 320px;
+}
+.detail-main {
+  padding-block: 24px 64px;
+}
+.detail-grid {
+  display: grid;
+  gap: 28px;
+}
+.gallery-main {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--muted);
+}
+.gallery-main > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.gallery-prev,
+.gallery-next {
+  position: absolute;
+  top: calc(50% - 22px);
+}
+.gallery-prev {
+  left: 12px;
+}
+.gallery-next {
+  right: 12px;
+}
+.gallery-count {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--card);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 11px;
+}
+.gallery-thumbnails {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+.thumbnail-button {
+  padding: 0;
+  width: 68px;
+  height: 68px;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 2px solid transparent;
+}
+.thumbnail-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.thumbnail-active {
+  border-color: var(--primary);
+}
+.detail-info h1 {
+  font-size: 28px;
+  font-weight: 750;
+  line-height: 1.25;
+}
+.detail-price {
+  font-size: 26px;
+  font-weight: 800;
+  margin-block: 24px;
+}
+.detail-description {
+  border-top: 1px solid var(--border);
+  margin-top: 32px;
+  padding-top: 24px;
+}
+.detail-description h2 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.detail-description p {
+  font-size: 14px;
+  line-height: 1.85;
+  color: var(--muted-foreground);
+}
+.skeleton {
+  background: var(--muted);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise {
+  animation: rise 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@media (min-width: 640px) {
+  .catalog-container {
+    padding-inline: 28px;
+  }
+  .product-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .product-info {
+    padding: 18px;
+  }
+  .product-info h2 {
+    font-size: 15px;
+  }
+  .product-price {
+    font-size: 16px;
+  }
+  .catalog-button {
+    font-size: 12px;
+  }
+  .category-chips {
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+  .catalog-main {
+    padding-top: 32px;
+  }
+  .detail-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 40px;
+  }
+  .detail-info {
+    padding-top: 16px;
+  }
+  .catalog-toolbar {
+    margin-bottom: 20px;
+  }
+}
+@media (min-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .product-featured .product-image-link {
+    min-height: 360px;
+  }
+  .search-field {
+    max-width: 600px;
+  }
+  .detail-grid {
+    gap: 64px;
+  }
+  .detail-info h1 {
+    font-size: 34px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
   }
 }

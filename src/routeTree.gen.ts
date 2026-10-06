@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CSlugIndexRouteImport } from './routes/c.$slug.index'
+import { Route as CSlugPProductSlugRouteImport } from './routes/c.$slug.p.$productSlug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CSlugIndexRoute = CSlugIndexRouteImport.update({
+  id: '/c/$slug/',
+  path: '/c/$slug/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CSlugPProductSlugRoute = CSlugPProductSlugRouteImport.update({
+  id: '/c/$slug/p/$productSlug',
+  path: '/c/$slug/p/$productSlug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/c/$slug/': typeof CSlugIndexRoute
+  '/c/$slug/p/$productSlug': typeof CSlugPProductSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/c/$slug': typeof CSlugIndexRoute
+  '/c/$slug/p/$productSlug': typeof CSlugPProductSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/c/$slug/': typeof CSlugIndexRoute
+  '/c/$slug/p/$productSlug': typeof CSlugPProductSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/c/$slug/' | '/c/$slug/p/$productSlug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/c/$slug' | '/c/$slug/p/$productSlug'
+  id: '__root__' | '/' | '/c/$slug/' | '/c/$slug/p/$productSlug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CSlugIndexRoute: typeof CSlugIndexRoute
+  CSlugPProductSlugRoute: typeof CSlugPProductSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/c/$slug/': {
+      id: '/c/$slug/'
+      path: '/c/$slug'
+      fullPath: '/c/$slug/'
+      preLoaderRoute: typeof CSlugIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/c/$slug/p/$productSlug': {
+      id: '/c/$slug/p/$productSlug'
+      path: '/c/$slug/p/$productSlug'
+      fullPath: '/c/$slug/p/$productSlug'
+      preLoaderRoute: typeof CSlugPProductSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CSlugIndexRoute: CSlugIndexRoute,
+  CSlugPProductSlugRoute: CSlugPProductSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
