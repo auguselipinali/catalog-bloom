@@ -9,6 +9,12 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        catalog: "catalog-button",
+        catalogOutline: "catalog-outline",
+        chip: "chip-button",
+        chipActive: "chip-button chip-active",
+        cart: "cart-button",
+        thumbnail: "thumbnail-button",
         default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
         destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
