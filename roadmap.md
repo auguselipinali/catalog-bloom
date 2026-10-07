@@ -7,4 +7,4 @@
 - [x] WhatsApp customer form, encoded message, clear and confirmation
 - [x] Cart and WhatsApp tests and mobile/desktop verification
 - [ ] Complete WhatsApp destination (blocked: supplied +54 9 264 lacks subscriber number)
-- [ ] Fix missing WhatsApp configuration crash and verify regression
+- [x] Fix missing WhatsApp configuration crash and verify regression
