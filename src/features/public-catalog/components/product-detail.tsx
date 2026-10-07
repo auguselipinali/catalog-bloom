@@ -5,11 +5,17 @@ import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { catalogQuery, formatARS, isAvailable } from "../lib/catalog";
 import { CatalogHeader } from "./catalog-header";
+import { useCart } from "../hooks/use-cart";
+import { QuantitySelector } from "./quantity-selector";
 export function ProductDetail({ slug, productSlug }: { slug: string; productSlug: string }) {
   const { data: business } = useSuspenseQuery(catalogQuery(slug));
   const product = business.products.find((p) => p.slug === productSlug);
   const [active, setActive] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const cart = useCart(business);
   if (!product) throw notFound();
+  const remaining = Math.max(0, product.stock - cart.quantityFor(product.id));
+  const selectedQuantity = Math.min(quantity, Math.max(1, remaining));
   const change = (direction: number) =>
     setActive((i) => (i + direction + product.images.length) % product.images.length);
   return (
@@ -76,13 +82,15 @@ export function ProductDetail({ slug, productSlug }: { slug: string; productSlug
             <h1>{product.name}</h1>
             <p className="text-muted-foreground mt-2">{product.size}</p>
             <p className="detail-price">{formatARS(product.price)}</p>
+            {isAvailable(product) && <div className="detail-quantity"><span>Cantidad</span><QuantitySelector value={selectedQuantity} max={remaining} label={product.name} onChange={setQuantity}/>{remaining === 0 && <p className="text-muted-foreground text-sm">Stock máximo en el carrito.</p>}</div>}
             <Button
               variant="catalog"
               size="lg"
               className="w-full sm:w-auto"
-              disabled={!isAvailable(product)}
+              disabled={!isAvailable(product) || !cart.ready || remaining === 0}
               aria-label={`Agregar ${product.name}`}
-              title="Carrito próximamente"
+              title="Agregar al carrito"
+              onClick={() => { if (cart.add(product.id, selectedQuantity)) setQuantity(1); }}
             >
               Agregar
             </Button>

@@ -18,6 +18,7 @@ export interface Business {
   slug: string;
   name: string;
   tagline: string;
+  whatsappNumber: string;
   categories: Category[];
   products: Product[];
 }
