@@ -10,6 +10,11 @@ import {
   whatsappNumber,
 } from "./cart";
 describe("cart rules", () => {
+  it("safely rejects missing or malformed tenant WhatsApp values", () => {
+    for (const value of [undefined, null, 5492641234567, {}, ""]) {
+      expect(whatsappNumber(value)).toBeNull();
+    }
+  });
   it("isolates persisted carts by slug", () => {
     expect(cartStorageKey("lumina")).toBe("catalog-cart:lumina");
     expect(cartStorageKey("otro")).not.toBe(cartStorageKey("lumina"));

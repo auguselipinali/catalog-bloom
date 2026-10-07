@@ -49,7 +49,9 @@ export function cartLines(entries: CartEntry[], products: Product[]): CartLine[]
     return product ? [{ ...entry, product, subtotal: entry.quantity * product.price }] : [];
   });
 }
-export function whatsappNumber(raw: string) {
+export function whatsappNumber(raw: unknown) {
+  // Cached tenant data and older configurations may omit this field.
+  if (typeof raw !== "string") return null;
   const digits = raw.replace(/[\s+()-]/g, "");
   if (!/^[1-9]\d{9,14}$/.test(digits) || (digits.startsWith("549") && digits.length !== 13))
     return null;
