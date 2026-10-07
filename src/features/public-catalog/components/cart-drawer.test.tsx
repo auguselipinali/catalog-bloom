@@ -5,6 +5,15 @@ import { cartStorageKey } from '../lib/cart';
 import { CartDrawer } from './cart-drawer';
 afterEach(()=>{cleanup();vi.restoreAllMocks();});
 describe('WhatsApp handoff',()=>{
+ it('renders older tenant data without WhatsApp and prevents sending',async()=>{
+  const business={...demoBusiness,slug:'missing-whatsapp'};
+  Reflect.deleteProperty(business,'whatsappNumber');
+  localStorage.setItem(cartStorageKey(business.slug),JSON.stringify([{productId:'2',quantity:1}]));
+  render(<CartDrawer business={business} open onOpenChange={()=>{}}/>);
+  await waitFor(()=>expect(screen.getByLabelText('Tu nombre *')).toBeInTheDocument());
+  fireEvent.change(screen.getByLabelText('Tu nombre *'),{target:{value:'Ana'}});
+  expect(screen.getByRole('button',{name:'Enviar pedido por WhatsApp'})).toBeDisabled();
+ });
  it('clears cart and confirms preparation only after opening WhatsApp',async()=>{
   const business={...demoBusiness,slug:'handoff-success',whatsappNumber:'5492641234567'};
   localStorage.setItem(cartStorageKey(business.slug),JSON.stringify([{productId:'2',quantity:2}]));
