@@ -174,6 +174,8 @@ export const demoBusiness: Business = {
   slug: "lumina",
   name: "Lumina",
   tagline: "cosmética",
+  // Incomplete number supplied by the owner; sending stays disabled until completed.
+  whatsappNumber: "+54 9 264",
   categories: [
     { id: "rostro", name: "Rostro" },
     { id: "cuerpo", name: "Cuerpo" },
