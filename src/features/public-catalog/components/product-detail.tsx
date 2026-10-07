@@ -82,7 +82,20 @@ export function ProductDetail({ slug, productSlug }: { slug: string; productSlug
             <h1>{product.name}</h1>
             <p className="text-muted-foreground mt-2">{product.size}</p>
             <p className="detail-price">{formatARS(product.price)}</p>
-            {isAvailable(product) && <div className="detail-quantity"><span>Cantidad</span><QuantitySelector value={selectedQuantity} max={remaining} label={product.name} onChange={setQuantity}/>{remaining === 0 && <p className="text-muted-foreground text-sm">Stock máximo en el carrito.</p>}</div>}
+            {isAvailable(product) && (
+              <div className="detail-quantity">
+                <span>Cantidad</span>
+                <QuantitySelector
+                  value={selectedQuantity}
+                  max={remaining}
+                  label={product.name}
+                  onChange={setQuantity}
+                />
+                {remaining === 0 && (
+                  <p className="text-muted-foreground text-sm">Stock máximo en el carrito.</p>
+                )}
+              </div>
+            )}
             <Button
               variant="catalog"
               size="lg"
@@ -90,7 +103,9 @@ export function ProductDetail({ slug, productSlug }: { slug: string; productSlug
               disabled={!isAvailable(product) || !cart.ready || remaining === 0}
               aria-label={`Agregar ${product.name}`}
               title="Agregar al carrito"
-              onClick={() => { if (cart.add(product.id, selectedQuantity)) setQuantity(1); }}
+              onClick={() => {
+                if (cart.add(product.id, selectedQuantity)) setQuantity(1);
+              }}
             >
               Agregar
             </Button>

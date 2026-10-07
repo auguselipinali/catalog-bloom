@@ -54,7 +54,13 @@ export function ProductCard({
             size="sm"
             disabled={!available || !cart.ready || atLimit}
             aria-label={`Agregar ${product.name}`}
-            title={!available ? "Sin stock" : atLimit ? "Stock máximo en el carrito" : "Agregar al carrito"}
+            title={
+              !available
+                ? "Sin stock"
+                : atLimit
+                  ? "Stock máximo en el carrito"
+                  : "Agregar al carrito"
+            }
             onClick={() => cart.add(product.id)}
           >
             Agregar
