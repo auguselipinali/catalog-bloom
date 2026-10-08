@@ -6,7 +6,7 @@
 - [x] Detail quantity selector, grid add and animated header count
 - [x] WhatsApp customer form, encoded message, clear and confirmation
 - [x] Cart and WhatsApp tests and mobile/desktop verification
-- [ ] Complete WhatsApp destination (blocked: supplied +54 9 264 lacks subscriber number)
+- [x] Complete WhatsApp destination with owner's full number +54 9 264 4170265
 - [x] Fix missing WhatsApp configuration crash and verify regression
 - [x] Tenant SEO from loader data with og:image, generic 404 titles
 - [x] Business logoUrl, brandColor (runtime --brand-primary), plan; optional product size
