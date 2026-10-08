@@ -5,15 +5,22 @@ import {
   CatalogNotFound,
 } from "@/features/public-catalog/components/catalog-states";
 import { catalogQuery, catalogHead } from "@/features/public-catalog/lib/catalog";
+import { absoluteUrl, currentOrigin } from "@/features/public-catalog/lib/origin.functions";
 export const Route = createFileRoute("/c/$slug/")({
-  loader: ({ context, params }) => context.queryClient.ensureQueryData(catalogQuery(params.slug)),
+  loader: async ({ context, params }) => {
+    const business = await context.queryClient.ensureQueryData(catalogQuery(params.slug));
+    const origin = await currentOrigin();
+    const image = absoluteUrl(business.logoUrl ?? business.products[0]?.images[0], origin);
+    return {
+      name: business.name,
+      description: `Catálogo de ${business.name}${business.tagline ? ` · ${business.tagline}` : ""}: ${business.categories.map((c) => c.name).join(", ")}.`,
+      image,
+    };
+  },
   head: ({ loaderData }) =>
-    catalogHead(
-      loaderData ? `${loaderData.name} · Catálogo de cosmética` : "Catálogo no disponible · Lumina",
-      loaderData
-        ? "Descubrí el catálogo de cosmética de Lumina: cuidado del rostro, cuerpo, cabello y labios."
-        : "Este catálogo no está disponible.",
-    ),
+    loaderData
+      ? catalogHead(`${loaderData.name} · Catálogo`, loaderData.description, loaderData.image)
+      : catalogHead("Catálogo no disponible", "Este catálogo no está disponible."),
   pendingComponent: CatalogSkeleton,
   notFoundComponent: CatalogNotFound,
   component: PublicCatalog,
