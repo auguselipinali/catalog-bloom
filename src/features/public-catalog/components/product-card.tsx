@@ -44,7 +44,7 @@ export function ProductCard({
         <Link to="/c/$slug/p/$productSlug" params={{ slug, productSlug: product.slug }}>
           <h2>{product.name}</h2>
         </Link>
-        <p className="product-size">{product.size}</p>
+        {product.size && <p className="product-size">{product.size}</p>}
         <div className="product-actions">
           <p className={cn("product-price", !available && "text-muted-foreground")}>
             {formatARS(product.price)}
