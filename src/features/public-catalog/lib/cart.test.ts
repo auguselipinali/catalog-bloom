@@ -94,10 +94,13 @@ describe("cart rules", () => {
         encodeURIComponent(orderMessage(business, entries, "Ana & Sol", "retiro #1")),
     );
   });
-  it("blocks the incomplete number supplied by the user", () => {
+  it("rejects an incomplete number and sends to the owner's full number", () => {
     expect(whatsappNumber("+54 9 264")).toBeNull();
-    expect(() =>
-      whatsappOrderUrl(demoBusiness, [{ productId: "2", quantity: 1 }], "Ana", ""),
-    ).toThrow();
+    expect(whatsappNumber(demoBusiness.whatsappNumber)).toBe("5492644170265");
+    expect(
+      whatsappOrderUrl(demoBusiness, [{ productId: "2", quantity: 1 }], "Ana", "").startsWith(
+        "https://wa.me/5492644170265?text=",
+      ),
+    ).toBe(true);
   });
 });
