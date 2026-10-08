@@ -13,7 +13,9 @@ export function CatalogHeader({ business }: { business: Business }) {
     if (!isHexColor(business.brandColor)) return;
     const root = document.documentElement;
     root.style.setProperty("--brand-primary", business.brandColor);
-    return () => root.style.removeProperty("--brand-primary");
+    return () => {
+      root.style.removeProperty("--brand-primary");
+    };
   }, [business.brandColor]);
   return (
     <>

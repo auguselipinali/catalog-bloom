@@ -28,7 +28,7 @@ export function selectProducts(
   return result;
 }
 async function fetchCatalog(slug: string) {
-  const apiUrl = import.meta.env.VITE_API_URL as string | undefined;
+  const apiUrl = import.meta.env["VITE_API_URL"] as string | undefined;
   if (!apiUrl) {
     if (slug !== demoBusiness.slug) throw notFound();
     return demoBusiness;

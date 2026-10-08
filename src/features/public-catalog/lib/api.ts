@@ -46,7 +46,19 @@ export function parseBusiness(input: unknown): Business {
     whatsappNumber: data.whatsappNumber,
     ...(data.logoUrl ? { logoUrl: data.logoUrl } : {}),
     brandColor: data.brandColor,
-    plan: data.plan,
+    plan: {
+      name: data.plan.name,
+      ...(data.plan.limits?.maxProducts !== undefined
+        ? { limits: { maxProducts: data.plan.limits.maxProducts } }
+        : {}),
+      ...(data.plan.features
+        ? {
+            features: Object.fromEntries(
+              Object.entries(data.plan.features).filter(([, v]) => v !== undefined),
+            ),
+          }
+        : {}),
+    },
     categories: data.categories,
     products: data.products.map(({ size, featured, ...p }) => ({
       ...p,
