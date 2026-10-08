@@ -176,6 +176,8 @@ export const demoBusiness: Business = {
   tagline: "cosmética",
   // Incomplete number supplied by the owner; sending stays disabled until completed.
   whatsappNumber: "+54 9 264",
+  brandColor: "#8069fe",
+  plan: { name: "demo", features: { stock: true } },
   categories: [
     { id: "rostro", name: "Rostro" },
     { id: "cuerpo", name: "Cuerpo" },

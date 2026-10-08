@@ -1,6 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { notFound } from "@tanstack/react-router";
 import { demoBusiness } from "../data/demo";
+import { parseBusiness } from "./api";
 import type { Product, PriceOrder } from "../types";
 export const formatARS = (price: number) =>
   `$${new Intl.NumberFormat("es-AR", { maximumFractionDigits: 0 }).format(price)}`;
@@ -26,25 +27,35 @@ export function selectProducts(
     result.sort((a, b) => (order === "asc" ? a.price - b.price : b.price - a.price));
   return result;
 }
-// Replace this read adapter with a database query when persistence is introduced.
+async function fetchCatalog(slug: string) {
+  const apiUrl = import.meta.env["VITE_API_URL"] as string | undefined;
+  if (!apiUrl) {
+    if (slug !== demoBusiness.slug) throw notFound();
+    return demoBusiness;
+  }
+  const res = await fetch(
+    `${apiUrl.replace(/\/$/, "")}/api/public/catalogs/${encodeURIComponent(slug)}`,
+  );
+  if (res.status === 404) throw notFound();
+  if (!res.ok) throw new Error(`No se pudo cargar el catálogo (${res.status})`);
+  return parseBusiness(await res.json());
+}
 export const catalogQuery = (slug: string) =>
   queryOptions({
     queryKey: ["public-catalog", slug],
-    queryFn: async () => {
-      if (slug !== demoBusiness.slug) throw notFound();
-      return demoBusiness;
-    },
-    staleTime: Infinity,
+    queryFn: () => fetchCatalog(slug),
+    staleTime: 60_000,
   });
-export function catalogHead(title: string, description: string) {
-  return {
-    meta: [
-      { title },
-      { name: "description", content: description },
-      { property: "og:title", content: title },
-      { property: "og:description", content: description },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  };
+export function catalogHead(title: string, description: string, image?: string) {
+  const meta: Record<string, string>[] = [
+    { title },
+    { name: "description", content: description },
+    { property: "og:title", content: title },
+    { property: "og:description", content: description },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary_large_image" },
+  ];
+  if (image)
+    meta.push({ property: "og:image", content: image }, { name: "twitter:image", content: image });
+  return { meta };
 }

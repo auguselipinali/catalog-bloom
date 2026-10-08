@@ -80,7 +80,7 @@ export function ProductDetail({ slug, productSlug }: { slug: string; productSlug
               {business.categories.find((c) => c.id === product.categoryId)?.name}
             </span>
             <h1>{product.name}</h1>
-            <p className="text-muted-foreground mt-2">{product.size}</p>
+            {product.size && <p className="text-muted-foreground mt-2">{product.size}</p>}
             <p className="detail-price">{formatARS(product.price)}</p>
             {isAvailable(product) && (
               <div className="detail-quantity">

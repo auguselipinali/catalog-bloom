@@ -8,3 +8,7 @@
 - [x] Cart and WhatsApp tests and mobile/desktop verification
 - [ ] Complete WhatsApp destination (blocked: supplied +54 9 264 lacks subscriber number)
 - [x] Fix missing WhatsApp configuration crash and verify regression
+- [x] Tenant SEO from loader data with og:image, generic 404 titles
+- [x] Business logoUrl, brandColor (runtime --brand-primary), plan; optional product size
+- [x] API read adapter with zod validation, demo fallback, .env.example, 60s staleTime
+- [x] Rename package to catalog-bloom

@@ -5,20 +5,23 @@ import {
   CatalogNotFound,
 } from "@/features/public-catalog/components/catalog-states";
 import { catalogQuery, catalogHead } from "@/features/public-catalog/lib/catalog";
+import { absoluteUrl, currentOrigin } from "@/features/public-catalog/lib/origin.functions";
 export const Route = createFileRoute("/c/$slug/p/$productSlug")({
   loader: async ({ context, params }) => {
     const business = await context.queryClient.ensureQueryData(catalogQuery(params.slug));
     const product = business.products.find((p) => p.slug === params.productSlug);
     if (!product) throw notFound();
-    return { business, product };
+    const origin = await currentOrigin();
+    return {
+      title: `${product.name} · ${business.name}`,
+      description: product.description || `${product.name} en ${business.name}.`,
+      image: absoluteUrl(product.images[0] ?? business.logoUrl, origin),
+    };
   },
   head: ({ loaderData }) =>
-    catalogHead(
-      loaderData
-        ? `${loaderData.product.name} · ${loaderData.business.name}`
-        : "Producto no disponible · Lumina",
-      loaderData?.product.description ?? "Este producto no está disponible.",
-    ),
+    loaderData
+      ? catalogHead(loaderData.title, loaderData.description, loaderData.image)
+      : catalogHead("Producto no disponible", "Este producto no está disponible."),
   pendingComponent: CatalogSkeleton,
   notFoundComponent: CatalogNotFound,
   component: PublicProduct,
