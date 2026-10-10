@@ -20,6 +20,6 @@
 - Keep reusable cart state in `useCart`, backed by a slug-keyed browser store and hydrated through effects; persist only product IDs and quantities and reconcile against current tenant stock.
 - Tenant name and WhatsApp destination belong to the example tenant config; order message construction and phone validation live in pure cart utilities, never UI components.
 - Opening WhatsApp clears the cart only after a popup opens successfully; confirmations describe a prepared message, not verified delivery.
-- Catalogs come from `${VITE_API_URL}/api/public/catalogs/:slug`, validated and mapped to `Business` in `lib/api.ts` with zod; without `VITE_API_URL` the demo tenant is the fallback, so the app runs without a backend.
+- Catalogs come from `${VITE_API_URL}/:slug/catalog` (documented in `.env.example`), validated and mapped to `Business` in `lib/api.ts` with zod; optional fields may be null or absent and ids are opaque strings (UUIDs), never numbers; without `VITE_API_URL` the demo tenant is the fallback, so the app runs without a backend.
 - Tenant SEO (title, description, og:image) is derived from loader data only; never hardcode a tenant name in route heads, and resolve og:image to an absolute URL.
 - A valid hex `brandColor` overrides `--brand-primary` at runtime on the document root; the stylesheet value is the fallback.

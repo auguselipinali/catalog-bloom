@@ -12,3 +12,4 @@
 - [x] Business logoUrl, brandColor (runtime --brand-primary), plan; optional product size
 - [x] API read adapter with zod validation, demo fallback, .env.example, 60s staleTime
 - [x] Rename package to catalog-bloom
+- [x] API path ${VITE_API_URL}/{slug}/catalog, null-tolerant zod schema, string UUID ids, .env.example updated

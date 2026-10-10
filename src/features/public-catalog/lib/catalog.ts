@@ -27,15 +27,15 @@ export function selectProducts(
     result.sort((a, b) => (order === "asc" ? a.price - b.price : b.price - a.price));
   return result;
 }
+export const catalogUrl = (apiUrl: string, slug: string) =>
+  `${apiUrl.replace(/\/+$/, "")}/${encodeURIComponent(slug)}/catalog`;
 async function fetchCatalog(slug: string) {
   const apiUrl = import.meta.env["VITE_API_URL"] as string | undefined;
   if (!apiUrl) {
     if (slug !== demoBusiness.slug) throw notFound();
     return demoBusiness;
   }
-  const res = await fetch(
-    `${apiUrl.replace(/\/$/, "")}/api/public/catalogs/${encodeURIComponent(slug)}`,
-  );
+  const res = await fetch(catalogUrl(apiUrl, slug));
   if (res.status === 404) throw notFound();
   if (!res.ok) throw new Error(`No se pudo cargar el catálogo (${res.status})`);
   return parseBusiness(await res.json());
