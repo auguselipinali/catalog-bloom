@@ -13,3 +13,4 @@
 - [x] API read adapter with zod validation, demo fallback, .env.example, 60s staleTime
 - [x] Rename package to catalog-bloom
 - [x] API path ${VITE_API_URL}/{slug}/catalog, null-tolerant zod schema, string UUID ids, .env.example updated
+- [x] WhatsApp send via location.assign, cart kept, pending-order confirmation on return, real error messages
