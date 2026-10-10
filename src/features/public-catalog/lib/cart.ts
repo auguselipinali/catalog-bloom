@@ -9,6 +9,21 @@ export interface CartLine extends CartEntry {
   subtotal: number;
 }
 export const cartStorageKey = (slug: string) => `catalog-cart:${slug}`;
+/** Set when the customer leaves for WhatsApp; checked when the drawer opens again. */
+export const orderPendingKey = (slug: string) => `catalog-order-pending:${slug}`;
+export function readOrderPending(slug: string) {
+  try {
+    return window.localStorage.getItem(orderPendingKey(slug)) !== null;
+  } catch {
+    return false;
+  }
+}
+export function writeOrderPending(slug: string, pending: boolean) {
+  try {
+    if (pending) window.localStorage.setItem(orderPendingKey(slug), new Date().toISOString());
+    else window.localStorage.removeItem(orderPendingKey(slug));
+  } catch {}
+}
 export function normalizeCart(raw: unknown, products: Product[]): CartEntry[] {
   if (!Array.isArray(raw)) return [];
   const quantities = new Map<string, number>();

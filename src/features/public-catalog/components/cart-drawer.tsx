@@ -1,11 +1,16 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ShoppingCart, X, Trash2, MessageCircle, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Business } from "../types";
 import { useCart } from "../hooks/use-cart";
 import { formatARS } from "../lib/catalog";
-import { whatsappNumber, whatsappOrderUrl } from "../lib/cart";
+import {
+  readOrderPending,
+  whatsappNumber,
+  whatsappOrderUrl,
+  writeOrderPending,
+} from "../lib/cart";
 import { QuantitySelector } from "./quantity-selector";
 export function CartDrawer({
   business,
@@ -21,27 +26,32 @@ export function CartDrawer({
   const [note, setNote] = useState("");
   const [error, setError] = useState("");
   const [confirmed, setConfirmed] = useState(false);
+  const [pending, setPending] = useState(false);
   const destinationReady = Boolean(whatsappNumber(business.whatsappNumber));
+  useEffect(() => {
+    if (open) setPending(readOrderPending(business.slug));
+  }, [open, business.slug]);
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
     try {
       const url = whatsappOrderUrl(business, cart.entries, name, note);
-      const popup = window.open("about:blank", "_blank");
-      if (!popup) {
-        setError("No pudimos abrir WhatsApp. Permití las ventanas emergentes e intentá de nuevo.");
-        return;
-      }
-      popup.opener = null;
-      popup.location.href = url;
-      cart.clear();
-      setConfirmed(true);
-      setName("");
-      setNote("");
+      writeOrderPending(business.slug, true);
+      window.location.assign(url);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "No pudimos preparar el pedido.");
+      writeOrderPending(business.slug, false);
+      setError(e instanceof Error ? e.message : String(e));
     }
   }
+  function resolvePending(clearCart: boolean) {
+    writeOrderPending(business.slug, false);
+    setPending(false);
+    if (clearCart) {
+      cart.clear();
+      setConfirmed(true);
+    }
+  }
+  const showPending = pending && cart.lines.length > 0;
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
@@ -60,13 +70,27 @@ export function CartDrawer({
               </Button>
             </Dialog.Close>
           </div>
-          {cart.lines.length === 0 ? (
+          {showPending ? (
+            <div className="cart-empty">
+              <div className="empty-icon">
+                <MessageCircle />
+              </div>
+              <h2>¿Se envió tu pedido?</h2>
+              <p>Si ya mandaste el mensaje por WhatsApp, podés vaciar el carrito.</p>
+              <Button variant="catalog" onClick={() => resolvePending(true)}>
+                Sí, vaciar carrito
+              </Button>
+              <Button variant="catalogOutline" onClick={() => resolvePending(false)}>
+                Mantener productos
+              </Button>
+            </div>
+          ) : cart.lines.length === 0 ? (
             <div className="cart-empty">
               <div className="empty-icon">{confirmed ? <Check /> : <ShoppingCart />}</div>
-              <h2>{confirmed ? "Pedido preparado" : "Tu carrito está vacío"}</h2>
+              <h2>{confirmed ? "Pedido enviado" : "Tu carrito está vacío"}</h2>
               <p>
                 {confirmed
-                  ? "Abrimos WhatsApp con tu pedido. Completá el envío del mensaje allí."
+                  ? "Vaciamos tu carrito. ¡Gracias por tu pedido!"
                   : "Encontrá tus favoritos y sumalos al carrito."}
               </p>
               <Button
