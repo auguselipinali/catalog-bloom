@@ -23,3 +23,5 @@
 - Catalogs come from `${VITE_API_URL}/:slug/catalog` (documented in `.env.example`), validated and mapped to `Business` in `lib/api.ts` with zod; optional fields may be null or absent and ids are opaque strings (UUIDs), never numbers; without `VITE_API_URL` the demo tenant is the fallback, so the app runs without a backend.
 - Tenant SEO (title, description, og:image) is derived from loader data only; never hardcode a tenant name in route heads, and resolve og:image to an absolute URL.
 - A valid hex `brandColor` overrides `--brand-primary` at runtime on the document root; the stylesheet value is the fallback.
+- The footer WhatsApp link is a plain `<a target="_blank" rel="noopener">` to wa.me built from the tenant number; it is hidden when the number is invalid.
+- Text over the brand color uses `--primary-foreground`, computed at runtime from `brandColor` via `lib/contrast.ts` for readable contrast.

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import type { Business } from "../types";
 import { useEffect, useState } from "react";
 import { isHexColor } from "../lib/api";
+import { readableOn } from "../lib/contrast";
 import { useCart } from "../hooks/use-cart";
 import { CartDrawer } from "./cart-drawer";
 export function CatalogHeader({ business }: { business: Business }) {
@@ -13,8 +14,10 @@ export function CatalogHeader({ business }: { business: Business }) {
     if (!isHexColor(business.brandColor)) return;
     const root = document.documentElement;
     root.style.setProperty("--brand-primary", business.brandColor);
+    root.style.setProperty("--primary-foreground", readableOn(business.brandColor)!);
     return () => {
       root.style.removeProperty("--brand-primary");
+      root.style.removeProperty("--primary-foreground");
     };
   }, [business.brandColor]);
   return (
@@ -30,7 +33,7 @@ export function CatalogHeader({ business }: { business: Business }) {
             {business.logoUrl ? (
               <img
                 src={business.logoUrl}
-                alt=""
+                alt={`Logo de ${business.name}`}
                 width={40}
                 height={40}
                 className="brand-mark shrink-0 object-cover"

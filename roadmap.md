@@ -14,3 +14,4 @@
 - [x] Rename package to catalog-bloom
 - [x] API path ${VITE_API_URL}/{slug}/catalog, null-tolerant zod schema, string UUID ids, .env.example updated
 - [x] WhatsApp send via location.assign, cart kept, pending-order confirmation on return, real error messages
+- [x] Featured section, swipe/zoom gallery, footer with WhatsApp link, lazy images, alt text, focus and brand contrast
