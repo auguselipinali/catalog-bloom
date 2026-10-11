@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
@@ -6,18 +6,24 @@ import { Button } from "@/components/ui/button";
 import { catalogQuery, formatARS, isAvailable } from "../lib/catalog";
 import { CatalogHeader } from "./catalog-header";
 import { useCart } from "../hooks/use-cart";
+import { CatalogFooter } from "./catalog-footer";
 import { QuantitySelector } from "./quantity-selector";
 export function ProductDetail({ slug, productSlug }: { slug: string; productSlug: string }) {
   const { data: business } = useSuspenseQuery(catalogQuery(slug));
   const product = business.products.find((p) => p.slug === productSlug);
   const [active, setActive] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [zoom, setZoom] = useState<{ x: number; y: number } | null>(null);
+  const touchX = useRef<number | null>(null);
   const cart = useCart(business);
   if (!product) throw notFound();
   const remaining = Math.max(0, product.stock - cart.quantityFor(product.id));
   const selectedQuantity = Math.min(quantity, Math.max(1, remaining));
-  const change = (direction: number) =>
+  const multiple = product.images.length > 1;
+  const change = (direction: number) => {
+    setZoom(null);
     setActive((i) => (i + direction + product.images.length) % product.images.length);
+  };
   return (
     <>
       <CatalogHeader business={business} />
@@ -30,13 +36,48 @@ export function ProductDetail({ slug, productSlug }: { slug: string; productSlug
         </Button>
         <div className="detail-grid">
           <div className="min-w-0">
-            <div className="gallery-main">
-              <img
-                src={product.images[active]}
-                alt={`${product.name}, vista ${active + 1}`}
-                width={640}
-                height={640}
-              />
+            <div
+              className="gallery-main"
+              onTouchStart={(e) => {
+                touchX.current = e.touches[0].clientX;
+              }}
+              onTouchEnd={(e) => {
+                if (!multiple || zoom || touchX.current === null) return;
+                const dx = e.changedTouches[0].clientX - touchX.current;
+                touchX.current = null;
+                if (Math.abs(dx) > 40) change(dx < 0 ? 1 : -1);
+              }}
+            >
+              {multiple ? (
+                <button
+                  type="button"
+                  className={`gallery-zoom ${zoom ? "is-zoomed" : ""}`}
+                  aria-label={zoom ? "Quitar zoom" : "Ampliar imagen"}
+                  aria-pressed={!!zoom}
+                  onClick={(e) => {
+                    if (zoom) return setZoom(null);
+                    const r = e.currentTarget.getBoundingClientRect();
+                    const x = r.width ? ((e.clientX - r.left) / r.width) * 100 : 50;
+                    const y = r.height ? ((e.clientY - r.top) / r.height) * 100 : 50;
+                    setZoom({ x: e.clientX ? x : 50, y: e.clientY ? y : 50 });
+                  }}
+                >
+                  <img
+                    src={product.images[active]}
+                    alt={`${product.name}, imagen ${active + 1} de ${product.images.length}`}
+                    width={640}
+                    height={640}
+                    style={zoom ? { transformOrigin: `${zoom.x}% ${zoom.y}%` } : undefined}
+                  />
+                </button>
+              ) : (
+                <img
+                  src={product.images[active]}
+                  alt={`${product.name}, vista ${active + 1}`}
+                  width={640}
+                  height={640}
+                />
+              )}
               {!isAvailable(product) && <span className="stock-badge">Sin stock</span>}
               <Button
                 variant="cart"
@@ -68,9 +109,18 @@ export function ProductDetail({ slug, productSlug }: { slug: string; productSlug
                   className={active === i ? "thumbnail-active" : ""}
                   aria-label={`Ver imagen ${i + 1}`}
                   aria-pressed={active === i}
-                  onClick={() => setActive(i)}
+                  onClick={() => {
+                    setZoom(null);
+                    setActive(i);
+                  }}
                 >
-                  <img src={image} alt="" width={80} height={80} />
+                  <img
+                    src={image}
+                    alt={`${product.name}, miniatura ${i + 1}`}
+                    width={80}
+                    height={80}
+                    loading="lazy"
+                  />
                 </Button>
               ))}
             </div>
@@ -116,6 +166,7 @@ export function ProductDetail({ slug, productSlug }: { slug: string; productSlug
           </div>
         </div>
       </main>
+      <CatalogFooter business={business} />
     </>
   );
 }

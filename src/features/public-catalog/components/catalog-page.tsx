@@ -6,6 +6,7 @@ import { catalogQuery, selectProducts } from "../lib/catalog";
 import type { PriceOrder } from "../types";
 import { CatalogHeader } from "./catalog-header";
 import { ProductCard } from "./product-card";
+import { CatalogFooter } from "./catalog-footer";
 import { EmptyState } from "./catalog-states";
 export function CatalogPage({ slug }: { slug: string }) {
   const { data: business } = useSuspenseQuery(catalogQuery(slug));
@@ -13,6 +14,7 @@ export function CatalogPage({ slug }: { slug: string }) {
   const [category, setCategory] = useState("all");
   const [order, setOrder] = useState<PriceOrder>("default");
   const products = selectProducts(business.products, query, category, order);
+  const featuredProducts = business.products.filter((p) => p.featured);
   const defaultView = !query && category === "all" && order === "default";
   return (
     <>
@@ -57,6 +59,21 @@ export function CatalogPage({ slug }: { slug: string }) {
             </Button>
           ))}
         </nav>
+        {featuredProducts.length > 0 && (
+          <section className="featured-section" aria-labelledby="featured-title">
+            <h2 id="featured-title">Destacados</h2>
+            <div className="featured-row">
+              {featuredProducts.map((p) => (
+                <ProductCard
+                  key={p.id}
+                  product={p}
+                  slug={slug}
+                  category={business.categories.find((c) => c.id === p.categoryId)?.name}
+                />
+              ))}
+            </div>
+          </section>
+        )}
         <div className="catalog-toolbar">
           <h1 aria-live="polite">
             {products.length} {products.length === 1 ? "producto" : "productos"}
@@ -96,6 +113,7 @@ export function CatalogPage({ slug }: { slug: string }) {
           />
         )}
       </main>
+      <CatalogFooter business={business} />
     </>
   );
 }

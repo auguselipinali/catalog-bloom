@@ -31,7 +31,7 @@ export function ProductCard({
       >
         <img
           src={product.images[0]}
-          alt={product.name}
+          alt={`${product.name}${category ? `, ${category}` : ""}${product.size ? `, ${product.size}` : ""}`}
           width={640}
           height={featured ? 900 : 640}
           loading={featured ? "eager" : "lazy"}
