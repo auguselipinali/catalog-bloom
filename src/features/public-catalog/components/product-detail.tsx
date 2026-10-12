@@ -39,11 +39,11 @@ export function ProductDetail({ slug, productSlug }: { slug: string; productSlug
             <div
               className="gallery-main"
               onTouchStart={(e) => {
-                touchX.current = e.touches[0].clientX;
+                touchX.current = e.touches[0]?.clientX ?? null;
               }}
               onTouchEnd={(e) => {
                 if (!multiple || zoom || touchX.current === null) return;
-                const dx = e.changedTouches[0].clientX - touchX.current;
+                const dx = (e.changedTouches[0]?.clientX ?? touchX.current) - touchX.current;
                 touchX.current = null;
                 if (Math.abs(dx) > 40) change(dx < 0 ? 1 : -1);
               }}
